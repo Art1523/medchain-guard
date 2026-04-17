@@ -14,16 +14,252 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      ledger: {
+        Row: {
+          block_hash: string
+          block_type: string
+          created_at: string
+          id: number
+          medicine_id: string | null
+          payload: Json
+          prev_hash: string
+        }
+        Insert: {
+          block_hash: string
+          block_type: string
+          created_at?: string
+          id?: number
+          medicine_id?: string | null
+          payload: Json
+          prev_hash: string
+        }
+        Update: {
+          block_hash?: string
+          block_type?: string
+          created_at?: string
+          id?: number
+          medicine_id?: string | null
+          payload?: Json
+          prev_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ledger_medicine_id_fkey"
+            columns: ["medicine_id"]
+            isOneToOne: false
+            referencedRelation: "medicines"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      medicines: {
+        Row: {
+          batch_number: string
+          created_at: string
+          expiry_date: string
+          id: string
+          manufacture_date: string
+          manufacturer_id: string
+          manufacturer_name: string
+          name: string
+          product_id: string
+          qr_secret: string
+          reference_image_path: string | null
+          reference_phash: string | null
+        }
+        Insert: {
+          batch_number: string
+          created_at?: string
+          expiry_date: string
+          id?: string
+          manufacture_date: string
+          manufacturer_id: string
+          manufacturer_name: string
+          name: string
+          product_id: string
+          qr_secret: string
+          reference_image_path?: string | null
+          reference_phash?: string | null
+        }
+        Update: {
+          batch_number?: string
+          created_at?: string
+          expiry_date?: string
+          id?: string
+          manufacture_date?: string
+          manufacturer_id?: string
+          manufacturer_name?: string
+          name?: string
+          product_id?: string
+          qr_secret?: string
+          reference_image_path?: string | null
+          reference_phash?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          company_name: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          company_name?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          company_name?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      scan_logs: {
+        Row: {
+          created_at: string
+          id: string
+          ip_hash: string | null
+          location: string | null
+          medicine_id: string | null
+          product_id: string
+          scanner_id: string | null
+          status: string | null
+          trust_score: number | null
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ip_hash?: string | null
+          location?: string | null
+          medicine_id?: string | null
+          product_id: string
+          scanner_id?: string | null
+          status?: string | null
+          trust_score?: number | null
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ip_hash?: string | null
+          location?: string | null
+          medicine_id?: string | null
+          product_id?: string
+          scanner_id?: string | null
+          status?: string | null
+          trust_score?: number | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scan_logs_medicine_id_fkey"
+            columns: ["medicine_id"]
+            isOneToOne: false
+            referencedRelation: "medicines"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      supply_chain_events: {
+        Row: {
+          actor_id: string
+          actor_name: string
+          actor_role: Database["public"]["Enums"]["app_role"]
+          created_at: string
+          event_type: string
+          id: string
+          location: string
+          medicine_id: string
+          notes: string | null
+        }
+        Insert: {
+          actor_id: string
+          actor_name: string
+          actor_role: Database["public"]["Enums"]["app_role"]
+          created_at?: string
+          event_type: string
+          id?: string
+          location: string
+          medicine_id: string
+          notes?: string | null
+        }
+        Update: {
+          actor_id?: string
+          actor_name?: string
+          actor_role?: Database["public"]["Enums"]["app_role"]
+          created_at?: string
+          event_type?: string
+          id?: string
+          location?: string
+          medicine_id?: string
+          notes?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "supply_chain_events_medicine_id_fkey"
+            columns: ["medicine_id"]
+            isOneToOne: false
+            referencedRelation: "medicines"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_roles: {
+        Args: { _user_id: string }
+        Returns: Database["public"]["Enums"]["app_role"][]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role:
+        | "manufacturer"
+        | "distributor"
+        | "pharmacy"
+        | "consumer"
+        | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +386,14 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: [
+        "manufacturer",
+        "distributor",
+        "pharmacy",
+        "consumer",
+        "admin",
+      ],
+    },
   },
 } as const
