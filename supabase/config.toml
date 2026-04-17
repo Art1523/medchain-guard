@@ -1,1 +1,16 @@
 project_id = "opoiovdtgqolpmeixbvw"
+
+[functions.verify-qr]
+verify_jwt = false
+
+[functions.image-check]
+verify_jwt = false
+
+[functions.verify-ledger]
+verify_jwt = false
+
+[functions.register-medicine]
+verify_jwt = true
+
+[functions.update-supply-chain]
+verify_jwt = true
