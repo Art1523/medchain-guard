@@ -4,7 +4,7 @@
 
 MedChain AI is a pharmaceutical anti-counterfeiting platform that fuses a **tamper-evident blockchain ledger**, **AI-powered anomaly detection**, and **computer-vision packaging verification** — so patients know if a pill is real before they swallow it.
 
-Live demo → **https://med-guardian-chain.lovable.app**
+Live demo → **https://medichain-trust-1-4erp.onrender.com**
 
 ---
 
